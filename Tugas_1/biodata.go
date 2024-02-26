@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"strconv"
 
@@ -30,8 +31,12 @@ func main() {
 		excelToKelas()
 	}
 
-	tambahAnggota("Heru", "Jatihandap", "FGA", "Mempelajari GoLang")
-	tambahAnggota("Irman", "Cigending", "FGA", "Mempelajari Bahasa")
+	tambahAnggota("Heru")
+	tambahAnggota("Irman")
+	tambahAnggota("Saep")
+	tambahAnggota("Irpan")
+	tambahAnggota("Kudis")
+	tambahAnggota("Telo")
 	fmt.Println("Path program:", argumen[0])
 	fmt.Println("Untuk akses berdasar absen, gunakan argumen pertama contoh go run biodata.go 1 untuk menampilkan absen 1, untuk menonaktifkan excel gunakan 0 pada argumen ke 2.")
 	fmt.Println("Argumen:", argumen[1:])
@@ -83,19 +88,23 @@ func excelToKelas() {
 	}
 }
 
-func tambahAnggota(Nama string, Alamat string, Pekerjaan string, Alasan string) {
+func tambahAnggota(Nama string) {
 	lastID++
 	anggota := kelas{
 		ID:        lastID,
 		Nama:      Nama,
-		Alamat:    Alamat,
-		Pekerjaan: Pekerjaan,
-		Alasan:    Alasan,
+		Alamat:    randomData([]string{"Jl. A", "Jl. B", "Jl. C", "Jl. D", "Bandung", "Jakarta", "Jl. Kebon Jeruk No. 123", "Jl. Merdeka No. 45", "Jl. Cihampelas No. 67", "Jl. Pahlawan No. 89", "Jl. Ahmad Yani No. 12", "Jl. Sukajadi No. 34", "Jl. Riau No. 56", "Jl. Dago No. 78", "Jl. Setiabudi No. 90", "Jl. Cijerah No. 23"}),
+		Pekerjaan: randomData([]string{"Mahasiswa", "Pegawai", "Wiraswasta", "Pelajar", "Software Engineer", "Data Analyst", "UI/UX Designer", "Network Engineer", "System Administrator", "Software Developer", "IT Consultant", "Cloud Engineer", "DevOps Engineer", "Cyber Security Analyst"}),
+		Alasan:    randomData([]string{"Menarik", "Butuh Skill Baru", "Rekomendasi Teman", "Iseng", "Belajar Golang", "Menyukai tantangan baru", "Ingin mengembangkan skill programming", "Minat pada desain grafis", "Passionate tentang jaringan komputer", "Pengalaman dalam administrasi sistem", "Minat pada pengembangan aplikasi", "Memiliki keahlian konsultasi IT", "Berpengalaman dalam pengelolaan cloud", "Memiliki keterampilan DevOps", "Minat pada keamanan cyber"}),
 	}
 	siswa = append(siswa, anggota)
 	fmt.Printf("%v\n", siswa[lastID-1])
 	// fmt.Printf("%v\n", siswa)
 
+}
+
+func randomData(data []string) string {
+	return data[rand.Intn(len(data))]
 }
 
 // Dibawah ini untuk program langsung akses excel.
