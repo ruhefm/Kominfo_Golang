@@ -27,7 +27,7 @@ func StartDB() {
 	if err != nil {
 		panic(err)
 	}
-	db.AutoMigrate(&models.Orders{}, &models.Items{})
+	db.AutoMigrate(&models.Orders{}, &models.Item{})
 	fmt.Println("DB LOG: DB Connected")
 }
 func GetDB() *gorm.DB {
@@ -44,7 +44,7 @@ func CreateOrder(order *models.Orders) error {
 	return nil
 }
 
-func CreateItems(order *models.Items) error {
+func CreateItems(order *models.Item) error {
 	db := GetDB()
 
 	if err := db.Create(order).Error; err != nil {

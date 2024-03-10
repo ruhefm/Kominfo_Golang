@@ -6,10 +6,10 @@ type Orders struct {
 	ID           uint      `json:"id" gorm:"primary_key;type:bigint"`
 	CustomerName string    `json:"customer_name" gorm:"type:varchar(50)"`
 	OrderedAt    time.Time `json:"ordered_at" gorm:"type:timestamp"`
-	Items        []Items   `json:"items" gorm:"foreignKey:OrdersID"`
+	Items        []Item    `json:"items" gorm:"foreignKey:OrdersID;references:ID"`
 }
 
-type Items struct {
+type Item struct {
 	ID          uint   `json:"id" gorm:"primary_key;type:bigint"`
 	Code        string `json:"code" gorm:"type:varchar(10)"`
 	Description string `json:"description" gorm:"type:varchar(50)"`

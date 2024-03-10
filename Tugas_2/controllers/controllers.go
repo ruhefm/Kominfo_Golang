@@ -11,7 +11,7 @@ import (
 )
 
 func CreateItems(c *gin.Context) {
-	var requestItems models.Items
+	var requestItems models.Item
 	// Code        string `json:"code" gorm:"type:varchar(10)"`
 	// Description string `json:"description" gorm:"type:varchar(50)"`
 	// Quantity    int64  `json:"quantity" gorm:"type:bigint"`
@@ -20,7 +20,7 @@ func CreateItems(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	items := models.Items{
+	items := models.Item{
 		OrdersID:    requestItems.OrdersID,
 		Code:        requestItems.Code,
 		Description: requestItems.Description,
