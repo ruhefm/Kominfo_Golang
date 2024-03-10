@@ -6,7 +6,7 @@ type Orders struct {
 	ID           uint      `json:"id" gorm:"primary_key;type:bigint"`
 	CustomerName string    `json:"customer_name" gorm:"type:varchar(50)"`
 	OrderedAt    time.Time `json:"ordered_at" gorm:"type:timestamp"`
-	Items        []Item    `json:"items" gorm:"foreignKey:OrdersID;references:ID"`
+	Items        []Item    `json:"items"`
 }
 
 type Item struct {
@@ -14,5 +14,6 @@ type Item struct {
 	Code        string `json:"code" gorm:"type:varchar(10)"`
 	Description string `json:"description" gorm:"type:varchar(50)"`
 	Quantity    int64  `json:"quantity" gorm:"type:bigint"`
-	OrdersID    uint   `json:"orders_id" gorm:"type:bigint"`
+	OrdersID    uint   `json:"orders_id"`
+	Order       Orders `json:"order" gorm:"foreignKey:OrdersID"`
 }
