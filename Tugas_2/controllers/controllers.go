@@ -85,21 +85,20 @@ func UpdateOrder(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid order ID"})
 		return
 	}
-
-	if request.CustomerName == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "CustomerName is required"})
-		return
-	}
-
 	order := models.Orders{
-		ID:           uint(updateID),
-		CustomerName: request.CustomerName,
+		ID: uint(updateID),
 	}
 
 	existingOrder, err := database.GetOrderByID(uint(updateID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get order"})
 		return
+	}
+	if request.CustomerName == "" {
+		order.CustomerName = existingOrder.CustomerName
+	}
+	if request.CustomerName != "" {
+		order.CustomerName = request.CustomerName
 	}
 	if !request.OrderedAt.IsZero() {
 		order.OrderedAt = request.OrderedAt
