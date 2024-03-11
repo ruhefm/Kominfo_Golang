@@ -24,6 +24,15 @@ type OrderedMap []struct {
 	Items        []Item    `json:"items"`
 }
 
+// @Summary Untuk menambahkan items ke user di orders / to insert items to user in orders
+// @Description CreateItems
+// @ID create-items
+// @Accept  json
+// @Produce  json
+// @Param item body models.Item true "Item object that needs to be added to the order"
+// @Success 200 {object} models.Item
+// @Router /items [post]
+
 func CreateItems(c *gin.Context) {
 	var requestItems models.Item
 	// Code        string `json:"code" gorm:"type:varchar(10)"`
@@ -59,6 +68,15 @@ func CreateItems(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 
 }
+
+// @Summary Untuk menambahkan user di orders / to insert user in orders
+// @Description CreateOrder
+// @ID create-order
+// @Accept  json
+// @Produce  json
+// @Param orders body models.Orders true "Orders object that needs to be added to the order"
+// @Success 200 {object} models.Orders
+// @Router /orders [post]
 
 func CreateOrder(c *gin.Context) {
 	var request models.Orders
@@ -98,6 +116,14 @@ func CreateOrder(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+// @Summary Retrieve order data
+// @Description Retrieve order data
+// @ID retrieve-order-data
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.Orders Preload {object} models.Items
+// @Router /orders [get]
+
 func GetOrders(c *gin.Context) {
 	orders, err := database.GetOrders()
 	if err != nil {
@@ -131,6 +157,16 @@ func GetOrders(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 }
+
+// @Summary Update order data
+// @Description Update order data
+// @ID update-order-data
+// @Accept json
+// @Produce json
+// @Param id path int true "Order ID"
+// @Param order body models.Orders true "Order Object"
+// @Success 200 {object} models.Orders
+// @Router /orders/{id} [patch]
 
 func UpdateOrder(c *gin.Context) {
 	id := c.Param("id")
@@ -193,6 +229,15 @@ func UpdateOrder(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 }
+
+// @Summary Delete order data
+// @Description Delete order data
+// @ID Delete-order-data
+// @Accept json
+// @Produce json
+// @Param id path int true "Order ID"
+// @Success 200 Success delete
+// @Router /orders/{id} [delete]
 
 func DeleteOrder(c *gin.Context) {
 	id := c.Param("id")

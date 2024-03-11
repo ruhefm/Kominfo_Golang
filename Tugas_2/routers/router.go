@@ -4,6 +4,9 @@ import (
 	"tugas2/controllers"
 
 	"github.com/gin-gonic/gin"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func StartServer() *gin.Engine {
@@ -15,6 +18,25 @@ func StartServer() *gin.Engine {
 	router.DELETE("/orders/:id", controllers.DeleteOrder)
 	router.POST("/items", controllers.CreateItems)
 	router.GET("/items", controllers.GetOrders)
-
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.GET("/docs/swagger.json", func(c *gin.Context) {
+		c.File("./docs/swagger.json")
+	})
+	router.Use(Cors())
 	return router
+}
+
+func Cors() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(200)
+			return
+		}
+
+		c.Next()
+	}
 }
