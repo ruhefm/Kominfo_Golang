@@ -17,8 +17,11 @@ func StartServer() *gin.Engine {
 	router.GET("/orders/:id", controllers.GetOrderByID)
 	router.PATCH("/orders", controllers.UpdateOrder)
 	router.DELETE("/orders/:id", controllers.DeleteOrder)
-	// router.POST("/items", controllers.CreateItems)
+	//Hanya digunakan untuk generate secara terpisah, sementara yang atas dapat dilakukan batch keduanya.
+	router.POST("/items", controllers.CreateItems)
+	router.POST("/users", controllers.CreateUsers)
 	router.GET("/items", controllers.GetOrders)
+	//Hanya digunakan untuk generate secara terpisah, sementara yang atas dapat dilakukan batch keduanya.
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.GET("/docs/swagger.json", func(c *gin.Context) {
 		c.File("./docs/swagger.json")
