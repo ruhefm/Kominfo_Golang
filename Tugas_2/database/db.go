@@ -57,7 +57,7 @@ func CreateItems(order *models.Item) error {
 func GetOrders() ([]models.Orders, error) {
 	var orders []models.Orders
 	db := GetDB()
-	if err := db.Find(&orders).Error; err != nil {
+	if err := db.Preload("Items").Find(&orders).Error; err != nil {
 		return nil, err
 	}
 	return orders, nil

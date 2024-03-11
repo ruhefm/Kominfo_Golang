@@ -15,5 +15,4 @@ type Item struct {
 	Description string `json:"description" gorm:"type:varchar(50)"`
 	Quantity    int64  `json:"quantity" gorm:"type:bigint"`
 	OrdersID    uint   `json:"orders_id"`
-	Order       Orders `json:"order" gorm:"foreignKey:OrdersID"`
 }
