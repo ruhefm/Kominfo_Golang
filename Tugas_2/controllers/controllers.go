@@ -256,7 +256,7 @@ func UpdateOrder(c *gin.Context) {
 	}
 
 	var items []Item
-	for _, item := range order.Items {
+	for _, item := range existingOrder.Items {
 		items = append(items, Item{
 			ID:          item.ID,
 			Code:        item.Code,
@@ -264,16 +264,26 @@ func UpdateOrder(c *gin.Context) {
 			Quantity:    int(item.Quantity),
 		})
 	}
-	response := OrderedMap{
-		{
-			ID:           order.ID,
-			OrderedAt:    order.OrderedAt,
-			CustomerName: order.CustomerName,
-			Items:        items,
-		},
+
+	response := struct {
+		ID           uint      `json:"id"`
+		OrderedAt    time.Time `json:"orderedAt"`
+		CustomerName string    `json:"customerName"`
+		Items        []Item    `json:"items"`
+	}{
+		ID:           order.ID,
+		OrderedAt:    order.OrderedAt,
+		CustomerName: order.CustomerName,
+		Items:        items,
 	}
 
-	c.JSON(http.StatusOK, response)
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal response"})
+		return
+	}
+
+	c.Data(http.StatusOK, "application/json", jsonResponse)
 }
 
 // @Summary Delete order data
