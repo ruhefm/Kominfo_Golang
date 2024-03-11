@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
 	"time"
@@ -156,6 +157,51 @@ func GetOrders(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, response)
+}
+
+func GetOrderByID(c *gin.Context) {
+	id := c.Param("id")
+	orderID, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid order ID"})
+		return
+	}
+
+	order, err := database.GetOrderByID(uint(orderID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch order"})
+		return
+	}
+
+	var items []Item
+	for _, item := range order.Items {
+		items = append(items, Item{
+			ID:          item.ID,
+			Code:        item.Code,
+			Description: item.Description,
+			Quantity:    int(item.Quantity),
+		})
+	}
+
+	response := struct {
+		ID           uint      `json:"id"`
+		OrderedAt    time.Time `json:"orderedAt"`
+		CustomerName string    `json:"customerName"`
+		Items        []Item    `json:"items"`
+	}{
+		ID:           order.ID,
+		OrderedAt:    order.OrderedAt,
+		CustomerName: order.CustomerName,
+		Items:        items,
+	}
+
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal response"})
+		return
+	}
+
+	c.Data(http.StatusOK, "application/json", jsonResponse)
 }
 
 // @Summary Update order data
