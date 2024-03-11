@@ -63,15 +63,26 @@ func GetOrders() ([]models.Orders, error) {
 	return orders, nil
 }
 
+func GetOrderByID(id uint) (*models.Orders, error) {
+	var order models.Orders
+	db := GetDB()
+	if err := db.Preload("Items").First(&order, id).Error; err != nil {
+		return nil, err
+	}
+	return &order, nil
+}
+
 func UpdateOrder(id uint, updatedOrder *models.Orders) error {
 	db := GetDB()
 
 	var order models.Orders
+
 	if err := db.First(&order, id).Error; err != nil {
 		return err
 	}
 
 	order.CustomerName = updatedOrder.CustomerName
+	order.OrderedAt = updatedOrder.OrderedAt
 
 	if err := db.Save(&order).Error; err != nil {
 		return err

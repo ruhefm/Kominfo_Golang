@@ -80,14 +80,32 @@ func UpdateOrder(c *gin.Context) {
 	}
 
 	updateID, err := strconv.Atoi(id)
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid order ID"})
+		return
+	}
+
+	if request.CustomerName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "CustomerName is required"})
 		return
 	}
 
 	order := models.Orders{
 		ID:           uint(updateID),
 		CustomerName: request.CustomerName,
+	}
+
+	existingOrder, err := database.GetOrderByID(uint(updateID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get order"})
+		return
+	}
+	if !request.OrderedAt.IsZero() {
+		order.OrderedAt = request.OrderedAt
+	}
+	if request.OrderedAt.IsZero() {
+		order.OrderedAt = existingOrder.OrderedAt
 	}
 
 	if err := database.UpdateOrder(uint(updateID), &order); err != nil {
