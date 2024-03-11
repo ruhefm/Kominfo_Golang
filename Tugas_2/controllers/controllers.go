@@ -306,69 +306,79 @@ func GetOrderByID(c *gin.Context) {
 // @Router /orders/{id} [patch]
 
 func UpdateOrder(c *gin.Context) {
-	id := c.Param("id")
-	var request models.Orders
+	var request []struct {
+		ID           uint      `json:"id"`
+		OrderedAt    time.Time `json:"orderedAt"`
+		CustomerName string    `json:"customerName"`
+		Items        []struct {
+			ID          uint   `json:"id"`
+			ItemCode    string `json:"itemCode"`
+			Description string `json:"description"`
+			Quantity    int    `json:"quantity"`
+		} `json:"items"`
+	}
+
 	if err := c.BindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	updateID, err := strconv.Atoi(id)
-
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid order ID"})
-		return
-	}
-	order := models.Orders{
-		ID: uint(updateID),
-	}
-
-	existingOrder, err := database.GetOrderByID(uint(updateID))
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get order"})
-		return
-	}
-	if request.CustomerName == "" {
-		order.CustomerName = existingOrder.CustomerName
-	}
-	if request.CustomerName != "" {
-		order.CustomerName = request.CustomerName
-	}
-	if !request.OrderedAt.IsZero() {
-		order.OrderedAt = request.OrderedAt
-	}
-	if request.OrderedAt.IsZero() {
-		order.OrderedAt = existingOrder.OrderedAt
-	}
-
-	if err := database.UpdateOrder(uint(updateID), &order); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update order"})
-		return
-	}
-
-	var items []Item
-	for _, item := range existingOrder.Items {
-		items = append(items, Item{
-			ID:          item.ID,
-			Code:        item.Code,
-			Description: item.Description,
-			Quantity:    int(item.Quantity),
-		})
-	}
-
-	response := struct {
+	var responses []struct {
 		ID           uint      `json:"id"`
 		OrderedAt    time.Time `json:"orderedAt"`
 		CustomerName string    `json:"customerName"`
 		Items        []Item    `json:"items"`
-	}{
-		ID:           order.ID,
-		OrderedAt:    order.OrderedAt,
-		CustomerName: order.CustomerName,
-		Items:        items,
 	}
 
-	jsonResponse, err := json.Marshal(response)
+	for _, req := range request {
+		updateID := req.ID
+
+		order := models.Orders{
+			ID:           updateID,
+			CustomerName: req.CustomerName,
+			OrderedAt:    req.OrderedAt,
+		}
+
+		if err := database.UpdateOrder(updateID, &order); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update order"})
+			return
+		}
+
+		var items []Item
+		for _, item := range req.Items {
+			newItem := models.Item{
+				ID:          item.ID,
+				OrdersID:    updateID,
+				Code:        item.ItemCode,
+				Description: item.Description,
+				Quantity:    int64(item.Quantity),
+			}
+			if err := database.UpdateItem(item.ID, &newItem); err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update item"})
+				return
+			}
+			items = append(items, Item{
+				ID:          newItem.ID,
+				Code:        newItem.Code,
+				Description: newItem.Description,
+				Quantity:    int(newItem.Quantity),
+			})
+		}
+
+		responses = append(responses, struct {
+			ID           uint      `json:"id"`
+			OrderedAt    time.Time `json:"orderedAt"`
+			CustomerName string    `json:"customerName"`
+			Items        []Item    `json:"items"`
+		}{
+			ID:           order.ID,
+			OrderedAt:    order.OrderedAt,
+			CustomerName: order.CustomerName,
+			Items:        items,
+		})
+	}
+
+	jsonResponse, err := json.Marshal(responses)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to marshal response"})
 		return

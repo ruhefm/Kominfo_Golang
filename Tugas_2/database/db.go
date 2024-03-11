@@ -91,6 +91,26 @@ func UpdateOrder(id uint, updatedOrder *models.Orders) error {
 	return nil
 }
 
+func UpdateItem(id uint, updatedOrder *models.Item) error {
+	db := GetDB()
+
+	var order models.Item
+
+	if err := db.First(&order, id).Error; err != nil {
+		return err
+	}
+
+	order.Code = updatedOrder.Code
+	order.Description = updatedOrder.Description
+	order.Quantity = updatedOrder.Quantity
+
+	if err := db.Save(&order).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func DeleteOrder(id uint) error {
 	db := GetDB()
 
