@@ -41,10 +41,16 @@ func CreateOrder(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	var OrderedAtTime time.Time
+	if request.OrderedAt.IsZero() {
+		OrderedAtTime = time.Now()
+	} else {
+		OrderedAtTime = request.OrderedAt
+	}
 
 	order := models.Orders{
 		CustomerName: request.CustomerName,
-		OrderedAt:    time.Now(),
+		OrderedAt:    OrderedAtTime,
 	}
 
 	if err := database.CreateOrder(&order); err != nil {
