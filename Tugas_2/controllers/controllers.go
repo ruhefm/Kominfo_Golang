@@ -45,7 +45,7 @@ func CreateItems(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create items"})
 		return
 	}
-
+	// Bisa tambahkan marshal
 	response := struct {
 		ItemCode    string `json:"itemCode"`
 		Description string `json:"description"`
