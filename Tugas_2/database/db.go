@@ -77,7 +77,7 @@ func UpdateOrder(id uint, updatedOrder *models.Orders) error {
 
 	var order models.Orders
 
-	if err := db.First(&order, id).Error; err != nil {
+	if err := db.Preload("Items").First(&order, id).Error; err != nil {
 		return err
 	}
 

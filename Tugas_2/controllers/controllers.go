@@ -10,6 +10,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type Item struct {
+	ID          uint   `json:"id"`
+	Code        string `json:"itemCode"`
+	Description string `json:"description"`
+	Quantity    int    `json:"quantity"`
+}
+
+type OrderedMap []struct {
+	ID           uint      `json:"id"`
+	OrderedAt    time.Time `json:"orderedAt"`
+	CustomerName string    `json:"customerName"`
+	Items        []Item    `json:"items"`
+}
+
 func CreateItems(c *gin.Context) {
 	var requestItems models.Item
 	// Code        string `json:"code" gorm:"type:varchar(10)"`
@@ -31,7 +45,19 @@ func CreateItems(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create items"})
 		return
 	}
-	c.JSON(http.StatusCreated, items)
+
+	response := struct {
+		ItemCode    string `json:"itemCode"`
+		Description string `json:"description"`
+		Quantity    int64  `json:"quantity"`
+	}{
+		ItemCode:    items.Code,
+		Description: items.Description,
+		Quantity:    items.Quantity,
+	}
+
+	c.JSON(http.StatusOK, response)
+
 }
 
 func CreateOrder(c *gin.Context) {
@@ -58,7 +84,18 @@ func CreateOrder(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, order)
+	response := struct {
+		ID           uint      `json:"id"`
+		OrderedAt    time.Time `json:"orderedAt"`
+		CustomerName string    `json:"customerName"`
+		Items        []Item    `json:"items"`
+	}{
+		ID:           order.ID,
+		OrderedAt:    order.OrderedAt,
+		CustomerName: order.CustomerName,
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 func GetOrders(c *gin.Context) {
@@ -68,7 +105,31 @@ func GetOrders(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, orders)
+	var response OrderedMap
+	for _, order := range orders {
+		var items []Item
+		for _, item := range order.Items {
+			items = append(items, Item{
+				ID:          item.ID,
+				Code:        item.Code,
+				Description: item.Description,
+				Quantity:    int(item.Quantity),
+			})
+		}
+		response = append(response, struct {
+			ID           uint      `json:"id"`
+			OrderedAt    time.Time `json:"orderedAt"`
+			CustomerName string    `json:"customerName"`
+			Items        []Item    `json:"items"`
+		}{
+			ID:           order.ID,
+			OrderedAt:    order.OrderedAt,
+			CustomerName: order.CustomerName,
+			Items:        items,
+		})
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 func UpdateOrder(c *gin.Context) {
@@ -112,7 +173,25 @@ func UpdateOrder(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, order)
+	var items []Item
+	for _, item := range order.Items {
+		items = append(items, Item{
+			ID:          item.ID,
+			Code:        item.Code,
+			Description: item.Description,
+			Quantity:    int(item.Quantity),
+		})
+	}
+	response := OrderedMap{
+		{
+			ID:           order.ID,
+			OrderedAt:    order.OrderedAt,
+			CustomerName: order.CustomerName,
+			Items:        items,
+		},
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 func DeleteOrder(c *gin.Context) {
