@@ -35,7 +35,7 @@ type OrderedMap []struct {
 // @Router /items [post]
 
 func CreateItems(c *gin.Context) {
-	var requestItems models.Item
+	var requestItems []models.Item
 	// Code        string `json:"code" gorm:"type:varchar(10)"`
 	// Description string `json:"description" gorm:"type:varchar(50)"`
 	// Quantity    int64  `json:"quantity" gorm:"type:bigint"`
@@ -44,30 +44,38 @@ func CreateItems(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	items := models.Item{
-		OrdersID:    requestItems.OrdersID,
-		Code:        requestItems.Code,
-		Description: requestItems.Description,
-		Quantity:    requestItems.Quantity,
-	}
 
-	if err := database.CreateItems(&items); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create items"})
-		return
-	}
-	// Bisa tambahkan marshal
-	response := struct {
+	var responseItems []struct {
 		ItemCode    string `json:"itemCode"`
 		Description string `json:"description"`
 		Quantity    int64  `json:"quantity"`
-	}{
-		ItemCode:    items.Code,
-		Description: items.Description,
-		Quantity:    items.Quantity,
 	}
 
-	c.JSON(http.StatusOK, response)
+	for _, requestItem := range requestItems {
+		items := models.Item{
+			OrdersID:    requestItem.OrdersID,
+			Code:        requestItem.Code,
+			Description: requestItem.Description,
+			Quantity:    requestItem.Quantity,
+		}
 
+		if err := database.CreateItems(&items); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create items"})
+			return
+		}
+
+		responseItems = append(responseItems, struct {
+			ItemCode    string `json:"itemCode"`
+			Description string `json:"description"`
+			Quantity    int64  `json:"quantity"`
+		}{
+			ItemCode:    items.Code,
+			Description: items.Description,
+			Quantity:    items.Quantity,
+		})
+	}
+
+	c.JSON(http.StatusOK, responseItems)
 }
 
 // @Summary Untuk menambahkan user di orders / to insert user in orders
