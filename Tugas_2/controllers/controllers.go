@@ -88,41 +88,53 @@ func CreateItems(c *gin.Context) {
 // @Router /orders [post]
 
 func CreateOrder(c *gin.Context) {
-	var request models.Orders
+	var request []models.Orders
 
 	if err := c.BindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	var OrderedAtTime time.Time
-	if request.OrderedAt.IsZero() {
-		OrderedAtTime = time.Now()
-	} else {
-		OrderedAtTime = request.OrderedAt
-	}
 
-	order := models.Orders{
-		CustomerName: request.CustomerName,
-		OrderedAt:    OrderedAtTime,
-	}
-
-	if err := database.CreateOrder(&order); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create order"})
-		return
-	}
-
-	response := struct {
+	var responses []struct {
 		ID           uint      `json:"id"`
 		OrderedAt    time.Time `json:"orderedAt"`
 		CustomerName string    `json:"customerName"`
 		Items        []Item    `json:"items"`
-	}{
-		ID:           order.ID,
-		OrderedAt:    order.OrderedAt,
-		CustomerName: order.CustomerName,
 	}
 
-	c.JSON(http.StatusOK, response)
+	for _, requestItem := range request {
+		var OrderedAtTime time.Time
+		if requestItem.OrderedAt.IsZero() {
+			OrderedAtTime = time.Now()
+		} else {
+			OrderedAtTime = requestItem.OrderedAt
+		}
+
+		order := models.Orders{
+			CustomerName: requestItem.CustomerName,
+			OrderedAt:    OrderedAtTime,
+		}
+
+		if err := database.CreateOrder(&order); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create order"})
+			return
+		}
+
+		response := struct {
+			ID           uint      `json:"id"`
+			OrderedAt    time.Time `json:"orderedAt"`
+			CustomerName string    `json:"customerName"`
+			Items        []Item    `json:"items"`
+		}{
+			ID:           order.ID,
+			OrderedAt:    order.OrderedAt,
+			CustomerName: order.CustomerName,
+		}
+
+		responses = append(responses, response)
+	}
+
+	c.JSON(http.StatusOK, responses)
 }
 
 // @Summary Retrieve order data
