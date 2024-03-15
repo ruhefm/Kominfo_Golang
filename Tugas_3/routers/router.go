@@ -8,7 +8,7 @@ func StartServer() *gin.Engine {
 	router := gin.Default()
 
 	router.GET("/", func(c *gin.Context) {
-		c.File("halaman.html")
+		c.File("./views/halaman.html")
 	})
 	router.GET("/status.json", func(c *gin.Context) {
 		c.File("status.json")
