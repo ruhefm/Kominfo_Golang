@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shelter Status</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            function loadData(){
+                $.ajax({
+                    url: 'status.json', 
+                    dataType: 'json',
+                    success: function(data){
+                    var waterVal = data.status.water;
+                    var windVal = data.status.wind;
+                    var waterStat, windStat;
+
+                    if (waterVal < 5) {
+                        waterStat = "aman";
+                    } else if (waterVal >= 6 && waterVal <= 8) {
+                        waterStat = "siaga";
+                    } else {
+                        waterStat = "bahaya";
+                    }
+
+                    if (windVal < 6) {
+                        windStat = "aman";
+                    } else if (windVal >= 7 && windVal <= 15) {
+                        windStat = "siaga";
+                    } else {
+                        windStat = "bahaya";
+                    }
+
+                    $('#water').text(waterVal + " (" + waterStat + ")" + " m");
+                    $('#wind').text(windVal + " (" + windStat + ")" + " m/s");
+                    }
+                });
+            }
+
+ 
+            loadData();
+
+            // Auto-reload
+            setInterval(function(){
+                loadData();
+            }, 15500); // 15500 ms
+        });
+    </script>
+</head>
+<body>
+    <h1>Shelter Status</h1>
+    <p>Status:</p>
+    <ul>
+        <li>Water: <span id="water"></span></li>
+        <li>Wind: <span id="wind"></span></li>
+    </ul>
+</body>
+</html>
