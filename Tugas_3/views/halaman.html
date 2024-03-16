@@ -4,8 +4,7 @@
     <title>Shelter Status</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function(){
-            function loadData(){
+        function loadData(){
                 $.ajax({
                     url: 'status.json', 
                     dataType: 'json',
@@ -35,8 +34,8 @@
                     }
                 });
             }
-
- 
+        $(document).ready(function(){
+            
             loadData();
 
             // Auto-reload
@@ -44,6 +43,44 @@
                 loadData();
             }, 15500); // 15500 ms
         });
+
+
+
+
+
+//handle anchor buat request
+
+$(document).ready(function() {
+        $("a.pump").click(function(event) {
+            event.preventDefault();
+            var formDataArray = $("form").serializeArray();
+            formDataArray.forEach(function(element) {
+            if (element.name === "water" || element.name === "wind") {
+                element.value = parseInt(element.value);
+            }
+        });
+        var formDataSerialized = $.param(formDataArray);
+
+
+            $.ajax({
+                type: "POST",
+                url: "/pump_water_wind",
+                data: formDataSerialized,
+                success: function(response) {
+                    console.log("Success:", response);
+                },
+                error: function(error) {
+                    console.error("Error:", error);
+                }
+            });
+            loadData();
+        });
+    });
+
+
+
+
+
     </script>
 
 <style>
@@ -381,13 +418,38 @@ a.button:hover {
 
     <p class="clear"><br /></p>
 
-    <p>Welcome to Shelter Status Monitoring. In this program the operator will know Water and Wind status in our current shelter. Please directly give command to maintain our activity for our best living. Thank you for being good operator.</p><br />
+    <p>Welcome to Shelter Status Monitoring. In this program the operator will know Water and Wind status in our current shelter. Please directly give command to maintain our activity for our best living refers to manual instruction. Thank you for being good operator.</p><br />
     <h1>Shelter Status</h1>
     <p>Status:</p>
     <ul>
         <li>Water: <span id="water"></span></li>
         <li>Wind: <span id="wind"></span></li>
     </ul>
+    <p>Manual Instruction:</p>
+    <ul>
+        <li>waterValve < 5 = aman
+        waterValve >= 6 && waterValve <= 8 = siaga
+        !=above bahaya
+</li>
+<li>
+    
+    windValve < 6 = aman windValve >= 7 && windValve <= 15 siaga
+    !=above bahaya
+</li>
+    </ul>
+
+    <nav class="site clear">
+        <ul>
+            <form action="/pump_water_wind" method="post">
+                <label>Water >></label><input name="water" type="text" /><br />
+                <label>Wind >></label><input name="wind" type="text" /><br />     
+                <li><a class="pump" href="#" id="submitButton" title="">Pump Water and Wind</a></li>
+
+            </form>
+          
+        </ul>
+      </nav>
+
     <p>This system interface is refers to our default system https://codepen.io/mackorichardson/pen/vNMRpK.</p>
 </body>
 </html>
