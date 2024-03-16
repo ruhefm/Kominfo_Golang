@@ -74,6 +74,7 @@ $(document).ready(function() {
                 }
             });
             loadData();
+            $('#pump_succed').text("Thanks operator! You've changed our priority to pump water and wind to:" + formDataSerialized)
         });
     });
 
@@ -444,7 +445,7 @@ a.button:hover {
                 <label>Water >></label><input name="water" type="text" /><br />
                 <label>Wind >></label><input name="wind" type="text" /><br />     
                 <li><a class="pump" href="#" id="submitButton" title="">Pump Water and Wind</a></li>
-
+                <p id="pump_succed"></p>
             </form>
           
         </ul>
