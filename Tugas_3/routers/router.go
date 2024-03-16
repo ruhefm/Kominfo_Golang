@@ -42,6 +42,9 @@ func StartServer() *gin.Engine {
 	router.GET("/status.json", func(c *gin.Context) {
 		c.File("status.json")
 	})
+	router.GET("/danger.m4a", func(c *gin.Context) {
+		c.File("./views/danger.m4a")
+	})
 	router.POST("/pump_water_wind", func(c *gin.Context) {
 		filePath := "status.json"
 		waterIn, err := strconv.Atoi(c.PostForm("water"))

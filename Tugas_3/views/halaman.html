@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <audio id="danger" src="danger.m4a" autoplay></audio>
     <title>Shelter Status</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -12,21 +13,35 @@
                     var waterVal = data.status.water;
                     var windVal = data.status.wind;
                     var waterStat, windStat;
+                    var water = document.getElementById("water");
+                    var wind = document.getElementById("wind");
+                    var audio = document.getElementById("danger");
 
                     if (waterVal <= 5) {
                         waterStat = "aman";
+                        water.style.color = "#00dd00";
+
                     } else if (waterVal >= 6 && waterVal <= 8) {
                         waterStat = "siaga";
+                        water.style.color = "yellow";
+
                     } else {
                         waterStat = "bahaya";
+                        water.style.color = "red";
+                        audio.play();
                     }
 
                     if (windVal <= 6) {
                         windStat = "aman";
+                        wind.style.color = "#00dd00";
                     } else if (windVal >= 7 && windVal <= 15) {
                         windStat = "siaga";
+                        wind.style.color = "yellow";
+
                     } else {
                         windStat = "bahaya";
+                        wind.style.color = "red";
+                        audio.play();
                     }
 
                     $('#water').text(waterVal + " (" + waterStat + ")" + " m");
@@ -416,7 +431,8 @@ a.button:hover {
 
 
 <body>
-
+    <label>Name:</label>
+    <input id="operatorName" type="text" />
     <p class="clear"><br /></p>
     <p>Welcome to SMROS Shelter Monitoring Realtime Operating System. In this program the operator will know Water and Wind status in our current shelter. Please directly give command to maintain our activity for our best living refers to manual instruction. Thank you for being good operator.</p><br />
     <h1>Shelter Status</h1>
