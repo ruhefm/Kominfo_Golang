@@ -13,7 +13,7 @@
                     var windVal = data.status.wind;
                     var waterStat, windStat;
 
-                    if (waterVal < 5) {
+                    if (waterVal <= 5) {
                         waterStat = "aman";
                     } else if (waterVal >= 6 && waterVal <= 8) {
                         waterStat = "siaga";
@@ -21,7 +21,7 @@
                         waterStat = "bahaya";
                     }
 
-                    if (windVal < 6) {
+                    if (windVal <= 6) {
                         windStat = "aman";
                     } else if (windVal >= 7 && windVal <= 15) {
                         windStat = "siaga";
