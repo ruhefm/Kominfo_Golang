@@ -2,6 +2,8 @@
 <html>
 <head>
     <audio id="danger" src="danger.m4a" autoplay></audio>
+    <audio id="succed" src="succed.mp3" autoplay></audio>
+
     <title>Shelter Status</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -16,10 +18,12 @@
                     var water = document.getElementById("water");
                     var wind = document.getElementById("wind");
                     var audio = document.getElementById("danger");
-
+                    var succed = document.getElementById("succed")
                     if (waterVal <= 5) {
                         waterStat = "aman";
                         water.style.color = "#00dd00";
+                        succed.play();
+
 
                     } else if (waterVal >= 6 && waterVal <= 8) {
                         waterStat = "siaga";
@@ -34,6 +38,8 @@
                     if (windVal <= 6) {
                         windStat = "aman";
                         wind.style.color = "#00dd00";
+                        succed.play();
+
                     } else if (windVal >= 7 && windVal <= 15) {
                         windStat = "siaga";
                         wind.style.color = "yellow";
