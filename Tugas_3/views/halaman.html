@@ -51,7 +51,7 @@
 //handle anchor buat request
 
 $(document).ready(function() {
-        $("a.pump").click(function(event) {
+        $("input.pump").click(function(event) {
             event.preventDefault();
             var formDataArray = $("form").serializeArray();
             formDataArray.forEach(function(element) {
@@ -419,7 +419,7 @@ a.button:hover {
 
     <p class="clear"><br /></p>
 
-    <p>Welcome to Shelter Status Monitoring. In this program the operator will know Water and Wind status in our current shelter. Please directly give command to maintain our activity for our best living refers to manual instruction. Thank you for being good operator.</p><br />
+    <p>Welcome to SMROS Shelter Monitoring Realtime Operating System. In this program the operator will know Water and Wind status in our current shelter. Please directly give command to maintain our activity for our best living refers to manual instruction. Thank you for being good operator.</p><br />
     <h1>Shelter Status</h1>
     <p>Status:</p>
     <ul>
@@ -444,7 +444,7 @@ a.button:hover {
             <form action="/pump_water_wind" method="post">
                 <label>Water >></label><input name="water" type="text" /><br />
                 <label>Wind >></label><input name="wind" type="text" /><br />     
-                <li><a class="pump" href="#" id="submitButton" title="">Pump Water and Wind</a></li>
+                <input class="pump" type="submit" value="Pump Water and Wind" />
                 <p id="pump_succed"></p>
             </form>
           
