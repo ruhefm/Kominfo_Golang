@@ -33,10 +33,10 @@ type Status struct {
 	Wind  int `json:"wind"`
 }
 
-type Credit struct {
-	operatorName string `json:"operatorName"`
-	credits      int    `json:"credits"`
-}
+// type Credit struct {
+// 	operatorName string `json:"operatorName"`
+// 	credits      int    `json:"credits"`
+// }
 
 func saveCredits(credits map[string]int, filePath string) error {
 	file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
@@ -101,10 +101,6 @@ func StartServer() *gin.Engine {
 			Wind:  windIn,
 		}
 		jsonSimpan(status, filePath)
-		if err != nil {
-			fmt.Println("Error: ", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save credits"})
-		}
 	})
 
 	router.POST("/addCredit", func(c *gin.Context) {

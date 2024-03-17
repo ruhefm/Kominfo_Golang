@@ -89,6 +89,24 @@
                     $('#wind').text(windVal + " (" + windStat + ")" + " m/s");
                     }
                 });
+                
+                $.ajax({
+                url: 'public/credit.json',
+                dataType: 'json',
+                success: function(data) {
+                    var creditsHtml = '<ul>';
+                    $.each(data, function(name, credits) {
+                        creditsHtml += '<li>Operator ' + name + ': ' + credits + ' Credits</li>';
+                    });
+                    creditsHtml += '</ul>';
+                    $('#credits').html(creditsHtml);
+                },
+                error: function() {
+                    $('#credits').html('Failed to load credits.');
+                }
+            });
+                
+
             }
         $(document).ready(function(){
             
@@ -506,7 +524,8 @@ a.button:hover {
           
         </ul>
       </nav>
-
+      <p>Leader Board</p>
+      <p id="credits"></p>
     <p>This system interface is refers to our default system https://codepen.io/mackorichardson/pen/vNMRpK.</p>
 </body>
 </html>
