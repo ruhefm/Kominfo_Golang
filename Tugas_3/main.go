@@ -22,7 +22,7 @@ func acakStatus() Status {
 }
 
 func jsonSimpan(status Status, filePath string) error {
-	file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0777) //path file, write read only, create if tidak ada, trunc if ada, granted power privileges.
+	file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644) //path file, write read only, create if tidak ada, trunc if ada, granted power privileges.
 	if err != nil {
 		return err
 	}
