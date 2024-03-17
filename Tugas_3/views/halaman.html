@@ -23,11 +23,12 @@
                         waterStat = "aman";
                         water.style.color = "#00dd00";
                         succed.play();
-
+                        $('#pump_succed').text("Thanks operator " + nameOperator + "! For your dedicated service.")
 
                     } else if (waterVal >= 6 && waterVal <= 8) {
                         waterStat = "siaga";
                         water.style.color = "yellow";
+                        $('#pump_succed').text("Careful operator " + nameOperator + "! Our shelter need some attention.")
 
                     } else {
                         waterStat = "bahaya";
@@ -40,11 +41,11 @@
                         windStat = "aman";
                         wind.style.color = "#00dd00";
                         succed.play();
-
+                        $('#pump_succed').text("Thanks operator " + nameOperator + "! For your dedicated service.")
                     } else if (windVal >= 7 && windVal <= 15) {
                         windStat = "siaga";
                         wind.style.color = "yellow";
-
+                        $('#pump_succed').text("Careful operator " + nameOperator + "! Our shelter need some attention.")
                     } else {
                         windStat = "bahaya";
                         wind.style.color = "red";
