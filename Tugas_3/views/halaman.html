@@ -7,9 +7,13 @@
     <title>Shelter Status</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        var nameOperator = "";
+        function operatorName(name) {
+        nameOperator = name;
+        document.getElementById("displayOperatorName").innerText = name;
+    }
         const data = new URLSearchParams();
         const url = '/addCredit';
-        var nameOperator = "";
         function addCredit() {
                 data.append('name', nameOperator);
                 const requestOptions = {
@@ -469,12 +473,6 @@ a.button:hover {
 
 <body>
     <label>Name:</label>
-    <script>
-    function operatorName(name) {
-        nameOperator = name;
-        document.getElementById("displayOperatorName").innerText = name;
-    }
-    </script>
     <input id="operatorName" type="text" value="please input operator name to gain credits ..." oninput="operatorName(this.value)" />
     <p class="clear"><br /></p>
     <p>Welcome to (SMROS) Shelter Monitoring Realtime Operating System. In this program the operator will know Water and Wind status in our current shelter. Please directly give command to maintain our activity for our best living by refers to manual instruction. Thank you for being good operator <span id="displayOperatorName"></span>.</p><br />
