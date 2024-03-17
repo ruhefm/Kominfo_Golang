@@ -33,6 +33,7 @@
                         waterStat = "bahaya";
                         water.style.color = "red";
                         audio.play();
+                        $('#pump_succed').text("It's now dangerous operator " + nameOperator + "! Please take a lead!");
                     }
 
                     if (windVal <= 6) {
@@ -48,6 +49,7 @@
                         windStat = "bahaya";
                         wind.style.color = "red";
                         audio.play();
+                        $('#pump_succed').text("It's now dangerous operator " + nameOperator + "! Please take a lead!");
                     }
 
                     $('#water').text(waterVal + " (" + waterStat + ")" + " m");
