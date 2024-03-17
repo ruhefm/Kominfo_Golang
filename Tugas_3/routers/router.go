@@ -39,17 +39,9 @@ func StartServer() *gin.Engine {
 	router.GET("/", func(c *gin.Context) {
 		c.File("./views/halaman.html")
 	})
-	router.GET("/status.json", func(c *gin.Context) {
-		c.File("status.json")
-	})
-	router.GET("/danger.m4a", func(c *gin.Context) {
-		c.File("./views/danger.m4a")
-	})
-	router.GET("/succed.mp3", func(c *gin.Context) {
-		c.File("./views/succed.mp3")
-	})
+	router.Static("/public", "./views")
 	router.POST("/pump_water_wind", func(c *gin.Context) {
-		filePath := "status.json"
+		filePath := "./views/status.json"
 		waterIn, err := strconv.Atoi(c.PostForm("water"))
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid value for water"})

@@ -54,7 +54,7 @@ func rutinitas15(filePath string) {
 var PORT = ":8080"
 
 func main() {
-	filePath := "status.json"
+	filePath := "./views/status.json"
 	go rutinitas15(filePath)
 	routers.StartServer().Run(PORT)
 }

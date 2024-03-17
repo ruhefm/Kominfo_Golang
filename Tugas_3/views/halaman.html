@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <audio id="danger" src="danger.m4a" autoplay></audio>
-    <audio id="succed" src="succed.mp3" autoplay></audio>
+    <audio id="danger" src="/public/danger.m4a" autoplay></audio>
+    <audio id="succed" src="/public/succed.mp3" autoplay></audio>
 
     <title>Shelter Status</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function loadData(){
                 $.ajax({
-                    url: 'status.json', 
+                    url: 'public/status.json', 
                     dataType: 'json',
                     success: function(data){
                     var waterVal = data.status.water;
@@ -95,7 +95,7 @@ $(document).ready(function() {
                 }
             });
             loadData();
-            $('#pump_succed').text("Thanks operator! You've changed our priority to pump water and wind to:" + formDataSerialized)
+            $('#pump_succed').text("Thanks operator " + nameOperator + "! You've changed our priority to pump water and wind to:" + formDataSerialized)
         });
     });
 
@@ -416,14 +416,14 @@ a.button:hover {
 
     <header class="site clearfix">
       <div class="col one">
-        <img src="https://assets.codepen.io/2856/Logo_591Design_2015-12-01.png" alt="591 Systems" width="740" height="729" id="logo-v" />
+        <img src="/public/RFM_LOGO.png" alt="RFM Systems" width="740" height="729" id="logo-v" />
       </div>
       <div class="col two">
-        <h4>591 Systems (tm) <br /> <b>S</b>helter <b>M</b>onitoring <b>R</b>ealtime <b>O</b>perating <b>S</b>ystem (SMROS)</h4>
+        <h4>RFM Systems (tm) <br /> <b>S</b>helter <b>M</b>onitoring <b>R</b>ealtime <b>O</b>perating <b>S</b>ystem (SMROS)</h4>
         <p>----------------------------------------</p>
         <p>SMROS v 1.0.0</p>
-        <p>(c)2024 591 Industries</p>
-        <p>- Server 591 -</p>
+        <p>(c)2024 RFM Industries</p>
+        <p>- Server RFM GoLang Kominfo -</p>
       </div>
     </header>
 
@@ -438,9 +438,16 @@ a.button:hover {
 
 <body>
     <label>Name:</label>
-    <input id="operatorName" type="text" />
+    <script>
+    var nameOperator = "";
+    function operatorName(name) {
+        nameOperator = name;
+        document.getElementById("displayOperatorName").innerText = name;
+    }
+    </script>
+    <input id="operatorName" type="text" oninput="operatorName(this.value)" />
     <p class="clear"><br /></p>
-    <p>Welcome to SMROS Shelter Monitoring Realtime Operating System. In this program the operator will know Water and Wind status in our current shelter. Please directly give command to maintain our activity for our best living refers to manual instruction. Thank you for being good operator.</p><br />
+    <p>Welcome to (SMROS) Shelter Monitoring Realtime Operating System. In this program the operator will know Water and Wind status in our current shelter. Please directly give command to maintain our activity for our best living refers to manual instruction. Thank you for being good operator <span id="displayOperatorName"></span>.</p><br />
     <h1>Shelter Status</h1>
     <p>Status:</p>
     <ul>
